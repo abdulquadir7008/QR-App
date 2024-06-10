@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html dir="ltr">
+<?php include 'includes/head.php';?>
+
+
+<?php
+    include 'includes/dbcon.php';
+    session_start();
+
+    if(isset($_SESSION['id'])){
+
+        header('location:index.php');
+    }
+
+    if(isset($_POST['log'])){
+
+        $username = $_POST['username'];
+        $password =  $_POST['password'];
+
+        $username = stripslashes($username);
+        $password = stripslashes($password);
+
+        $sql = "SELECT * FROM qr_users where username = '$username' and password = '$password' and type='member'";
+        
+        
+        $result = $conn->query($sql);
+
+        if($result-> num_rows > 0){
+            while($row= $result->fetch_assoc()){
+                $_SESSION['id'] = $row['id'];
+                $_SESSION['username'] = $row['username'];   
+            }
+            ?>
+            <script> alert('Welcome, <?php echo $_SESSION['username']?>'); </script>
+            <script>window.location='dashboard.php';</script>
+            <?php
+        
+            }else {
+    echo '<div style="text-align: center; background-color: #F8D7DA; color: #721C24; padding: 10px; border: 1px solid #F5C6CB; border-radius: 5px;">
+        <p style="font-size: 18px; font-weight: bold;">Invalid username or password</p>
+    </div>';
+}
+
+    }
+
+?>
+
+<body>
+    <div class="main-wrapper">
+        <div class="preloader">
+            <div class="lds-ripple">
+                <div class="lds-pos"></div>
+                <div class="lds-pos"></div>
+            </div>
+        </div>
+        
+        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center position-relative">
+            <div class="auth-box row">
+                <div class="col-lg-7 col-md-5 modal-bg-img" style="background-image: url(assets/images/opengov.jpg);">
+                </div>
+                <div class="col-lg-5 col-md-7 bg-white">
+                    <div class="p-3">
+                        
+                        <h2 class="mt-3 text-center">Log In</h2>
+                        <p class="text-center">Enter your email address and password to access admin panel.</p>
+                         <form class="mt-4" action="index.php" method="POST">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="text-dark" for="uname">Username</label>
+                                        <input class="form-control" name="username" type="text"
+                                            placeholder="enter your username">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="text-dark" for="pwd">Password</label>
+                                        <input class="form-control" name="password"  type="password"
+                                            placeholder="enter your password">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 text-center">
+                                    <input type="submit" name="log" class="btn btn-block btn-dark" value="Login">
+                                </div>
+                                <div class="col-lg-12 text-center mt-5">
+                                   <?php include 'includes/footer.php';?>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+  
+    <script src="../assets/libs/jquery/dist/jquery.min.js "></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="../assets/libs/popper.js/dist/umd/popper.min.js "></script>
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.min.js "></script>
+    <!-- ============================================================== -->
+    
+    <script>
+        $(".preloader ").fadeOut();
+    </script>
+</body>
+
+</html>
